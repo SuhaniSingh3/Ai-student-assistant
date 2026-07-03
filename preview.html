@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student AI | Interactive Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .dark .glass { background: rgba(15, 23, 42, 0.6); }
+        .gradient-text { background: linear-gradient(to right, #3b82f6, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-500 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('Dashboard');
+            const [tasks, setTasks] = useState([
+                { id: 1, text: 'Complete Math Assignment', completed: false, category: 'Academic' },
+                { id: 2, text: 'Gym Session', completed: true, category: 'Personal' }
+            ]);
+            
+            const stats = [
+                { label: 'Tasks Done', value: tasks.filter(t => t.completed).length, color: 'text-green-500' },
+                { label: 'Study Time', value: '4h 20m', color: 'text-purple-500' },
+                { label: 'GPA', value: '3.85', color: 'text-blue-500' },
+                { label: 'Consistency', value: '92%', color: 'text-orange-500' }
+            ];
+
+            return (
+                <div className="flex flex-col lg:flex-row min-h-screen">
+                    {/* Sidebar */}
+                    <aside className="w-full lg:w-72 glass border-r border-slate-200 dark:border-slate-800 p-6 space-y-8">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-600 rounded-xl shadow-lg">
+                                <i data-lucide="graduation-cap" className="text-white"></i>
+                            </div>
+                            <h1 className="text-2xl font-black gradient-text uppercase tracking-tight">Student AI</h1>
+                        </div>
+                        
+                        <nav className="space-y-2">
+                            {['Dashboard', 'Timer', 'ToDo', 'Results'].map(tab => (
+                                <button 
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold ${activeTab === tab ? 'bg-blue-600/10 text-blue-600' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                                >
+                                    <span className="capitalize">{tab}</span>
+                                </button>
+                            ))}
+                        </nav>
+                        
+                        <div className="pt-20">
+                            <div className="glass p-6 rounded-2xl border-blue-500/10 bg-blue-600/5">
+                                <p className="text-xs font-black text-blue-500 uppercase mb-2">Pro Tip</p>
+                                <p className="text-sm font-medium opacity-70">Focus on consistency rather than perfection.</p>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Main */}
+                    <main className="flex-1 p-8 md:p-12 space-y-10">
+                        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div>
+                                <h2 className="text-4xl md:text-5xl font-black tracking-tight">Hello, <span className="gradient-text">Preview Mode!</span></h2>
+                                <p className="text-slate-500 font-medium">Here is a snapshot of your personalized study suite.</p>
+                            </div>
+                            <div className="glass px-6 py-4 rounded-2xl flex items-center gap-4">
+                                <div className="p-3 bg-blue-600/10 rounded-full text-blue-500 animate-pulse-slow">
+                                    <i data-lucide="zap"></i>
+                                </div>
+                                <div>
+                                    <p className="text-2xl font-black">22:45</p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase">Live Pulse</p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {stats.map(stat => (
+                                <div key={stat.label} className="glass p-6 rounded-3xl group hover:scale-105 transition-all cursor-pointer">
+                                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">{stat.label}</p>
+                                    <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                            <div className="xl:col-span-2 glass rounded-[2.5rem] p-10 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-8 opacity-5">
+                                    <i data-lucide="quote" style={{ width: '150px', height: '150px' }}></i>
+                                </div>
+                                <div className="relative z-10 space-y-6">
+                                    <h3 className="text-xl font-black uppercase tracking-widest text-indigo-500">Daily Insight</h3>
+                                    <p className="text-3xl font-bold dark:text-white leading-snug">"The only way to do great work is to love what you do."</p>
+                                    <p className="font-black gradient-text uppercase tracking-widest">— Steve Jobs</p>
+                                </div>
+                            </div>
+                            
+                            <div className="glass rounded-[2rem] p-8 space-y-6">
+                                <h3 className="text-lg font-black uppercase tracking-widest text-emerald-500">Active Missions</h3>
+                                <div className="space-y-3">
+                                    {tasks.map(task => (
+                                        <div key={task.id} className="flex items-center gap-3 p-3 bg-slate-100/50 dark:bg-white/5 rounded-xl">
+                                            <div className={`w-5 h-5 rounded-md border-2 border-slate-300 ${task.completed ? 'bg-emerald-500 border-emerald-500' : ''}`}></div>
+                                            <span className={`font-bold ${task.completed ? 'line-through opacity-40' : ''}`}>{task.text}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center p-20 glass rounded-[3rem] border-dashed border-2 border-slate-300 dark:border-slate-800">
+                             <div className="p-4 bg-blue-600 rounded-full mb-6 shadow-2xl">
+                                <i data-lucide="play" className="text-white ml-1"></i>
+                             </div>
+                             <h3 className="text-2xl font-black mb-2 uppercase">Ready to launch?</h3>
+                             <p className="text-center font-medium text-slate-400 max-w-sm">Install Node.js on your terminal to run the full application with all interactive tools.</p>
+                             <div className="mt-8 flex gap-4">
+                                <span className="px-4 py-2 bg-slate-100 dark:bg-white/5 rounded-lg text-xs font-black uppercase tracking-widest">React 18</span>
+                                <span className="px-4 py-2 bg-slate-100 dark:bg-white/5 rounded-lg text-xs font-black uppercase tracking-widest">Vite 5</span>
+                                <span className="px-4 py-2 bg-slate-100 dark:bg-white/5 rounded-lg text-xs font-black uppercase tracking-widest">Tailwind 3</span>
+                             </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+        
+        // Initialize Lucide icons
+        setTimeout(() => lucide.createIcons(), 100);
+    </script>
+</body>
+</html>
